@@ -5,9 +5,8 @@ services:
   dropbox:
     hostname: ${HOSTNAME}
     build:
-      context: ${CONTEXT}
+      context: dropbox
       args:
-        IMAGE: ${IMAGE}
         USERACCOUNT: ${USERACCOUNT}
         GROUPACCOUNT: ${USERACCOUNT}
         UID: ${UID}

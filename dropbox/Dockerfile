@@ -1,5 +1,4 @@
-ARG IMAGE
-FROM ${IMAGE}
+FROM IMAGE=debian:stable-slim
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive
