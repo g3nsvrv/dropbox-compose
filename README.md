@@ -2,25 +2,23 @@
 
 Run the Linux Dropbox client inside Docker with persistent storage and configurable user mapping.
 
-This project builds a Docker image that installs the Dropbox daemon on top of a configurable Debian-based image, creates a user with custom UID/GID values, and stores Dropbox data inside a persistent volume.
+This project uses Docker Compose to run the [dropbox-container](https://github.com/g3nsvrv/dropbox-container) image, mapping it to a custom user with configurable UID/GID values, and storing Dropbox data inside a persistent volume.
 
 ## Features
 
 * Runs the official Linux Dropbox client inside Docker
-* Configurable base image
-* Custom user and group creation
+* No build step — pulls a pre-built image
+* Custom user and group creation, configurable per container
 * UID/GID mapping for host filesystem compatibility
 * Persistent user home directory using Docker volumes
-* Automatically downloads and installs Dropbox
+* No credentials generated or stored
 
 ## Project structure
 
 ```text
 .
 ├── .env
-├── docker-compose.yaml
-└── dropbox/
-    └── Dockerfile
+└── docker-compose.yaml
 ```
 
 ## Configuration
@@ -28,31 +26,29 @@ This project builds a Docker image that installs the Dropbox daemon on top of a 
 Configuration is stored in `.env`:
 
 ```env
-CONTEXT=dropbox
-IMAGE=debian:stable-slim
 USERACCOUNT=dropbox
+GROUPACCOUNT=dropbox
 HOSTNAME=dropbox-docker
-UID=1000
-GID=100
+PUID=1000
+PGID=100
 ```
 
 ### Variables
 
-| Variable      | Description                           |
-| ------------- | ------------------------------------- |
-| `CONTEXT`     | Docker build context                  |
-| `IMAGE`       | Base image used for the build         |
-| `USERACCOUNT` | Username created inside the container |
-| `HOSTNAME`    | Container hostname                    |
-| `UID`         | User ID used inside the container     |
-| `GID`         | Group ID used inside the container    |
+| Variable       | Description                              |
+| -------------- | ----------------------------------------- |
+| `USERACCOUNT`  | Username created inside the container     |
+| `GROUPACCOUNT` | Group name created inside the container   |
+| `HOSTNAME`     | Container hostname                        |
+| `PUID`         | User ID used inside the container         |
+| `PGID`         | Group ID used inside the container        |
 
 ## Usage
 
-Build and start:
+Pull and start:
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 ```
 
 Check logs:
@@ -86,17 +82,10 @@ The entire Dropbox user environment is persisted, including:
 
 ## Notes
 
-* The image generates a random password for the created user during build time.
-* The generated password is written to:
-
-```text
-/var/log/user-<username>.password
-```
-
-* The password is also printed to the container's stdout (log), viewable with `docker logs <container-name>`.
-* The Dropbox authorization link (needed to link your account on first startup) is also shown in the container's stdout (log), viewable with `docker logs <container-name>`.
-
+* No password is generated for the created account, and no credentials are stored in the image or container.
+* The Dropbox authorization link (needed to link your account on first startup) is shown in the container's stdout (log), viewable with `docker logs <container-name>`.
 * Dropbox data persists between container recreations through the Docker volume.
+* This project depends on the published [`ghcr.io/g3nsvrv/dropbox-container`](https://github.com/g3nsvrv/dropbox-container) image. To customize or extend the image itself, see that repository instead.
 
 ## TODO
 
