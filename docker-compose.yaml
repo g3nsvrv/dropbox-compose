@@ -1,0 +1,16 @@
+volumes:
+  dropbox-home:
+
+services:
+  dropbox:
+    hostname: ${HOSTNAME}
+    build:
+      context: ${CONTEXT}
+      args:
+        IMAGE: ${IMAGE}
+        USERACCOUNT: ${USERACCOUNT}
+        GROUPACCOUNT: ${USERACCOUNT}
+        UID: ${UID}
+        GID: ${GID}
+    volumes:
+      - dropbox-home:/home/${USERACCOUNT}
