@@ -3,7 +3,7 @@ volumes:
 
 services:
   dropbox:
-    image: ghrc.io/g3nsvrv/dropbox-container:latest
+    image: ghcr.io/g3nsvrv/dropbox-container:latest
     container_name: ${HOSTNAME}
     hostname: ${HOSTNAME}
     environment:
